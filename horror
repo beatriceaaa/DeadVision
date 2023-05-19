@@ -1,0 +1,57 @@
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import numpy as np
+
+fig, ax = plt.subplots()
+
+# Set initial position and size of the ghost
+x_position = 0
+y_position = 0
+ghost_size = 1
+
+# Define the ghost's body parts
+body_radius = ghost_size * 0.5
+head_radius = ghost_size * 0.3
+left_eye_radius = ghost_size * 0.05
+right_eye_radius = ghost_size * 0.05
+
+body = plt.Circle((x_position, y_position), body_radius, color='white')
+head = plt.Circle((x_position, y_position + body_radius), head_radius, color='white')
+left_eye = plt.Circle((x_position - ghost_size * 0.1, y_position + body_radius + head_radius * 0.3),
+                      left_eye_radius, color='black')
+right_eye = plt.Circle((x_position + ghost_size * 0.1, y_position + body_radius + head_radius * 0.3),
+                       right_eye_radius, color='black')
+
+# Add body parts to the plot
+ax.add_patch(body)
+ax.add_patch(head)
+ax.add_patch(left_eye)
+ax.add_patch(right_eye)
+
+# Set axis limits and aspect ratio
+ax.set_xlim([-1, 1])
+ax.set_ylim([-1, 1])
+ax.set_aspect('equal')
+
+# Generate random movement for the ghost
+num_frames = 100
+movement_x = np.random.uniform(-0.02, 0.02, num_frames)
+movement_y = np.random.uniform(-0.02, 0.02, num_frames)
+
+# Function to update the animation frame
+def update(frame):
+    # Move the ghost randomly
+    x_position += movement_x[frame]
+    y_position += movement_y[frame]
+    
+    # Update the position of the ghost's body parts
+    body.center = (x_position, y_position)
+    head.center = (x_position, y_position + body_radius)
+    left_eye.center = (x_position - ghost_size * 0.1, y_position + body_radius + head_radius * 0.3)
+    right_eye.center = (x_position + ghost_size * 0.1, y_position + body_radius + head_radius * 0.3)
+
+# Create the animation
+animation = animation.FuncAnimation(fig, update, frames=num_frames, interval=50)
+
+# Display the animation
+plt.show()
